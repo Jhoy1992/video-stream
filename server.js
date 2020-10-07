@@ -13,8 +13,15 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "views")));
 
 app.get("/", (req, res) => {
-  const video = req.query.name;
-  res.render("video", { video });
+  const { name: video, sub: subtitle } = req.query;
+
+  console.log({ video, subtitle });
+
+  res.render("video", { video, subtitle });
+});
+
+app.get("/subs/:name", (req, res) => {
+  res.sendFile(path.join(__dirname, "assets/sample.vtt"));
 });
 
 app.get("/videos/:name", (req, res) => {

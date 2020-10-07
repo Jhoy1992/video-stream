@@ -1,3 +1,9 @@
-<video id="videoPlayer" controls>
+<video id="videoPlayer" controls width="320" height="240">
   <source src="http://localhost:3000/videos/<%= video %>" type="video/mp4" />
+  <track
+    label="Português"
+    kind="subtitles"
+    srclang="pt"
+    src="http://localhost:3000/subs/<%= subtitle %>"
+  />
 </video>
