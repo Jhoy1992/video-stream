@@ -1,8 +1,15 @@
+require('dotenv').config()
+
 const express = require("express");
 const http = require("http");
 const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
+
+const watch = require('./utils/fileWatcher');
+
+watch()
+
 
 const app = express();
 const server = http.Server(app);
@@ -21,11 +28,13 @@ app.get("/", (req, res) => {
 });
 
 app.get("/subs/:name", (req, res) => {
-  res.sendFile(path.join(__dirname, "assets/sample.vtt"));
+  console.log(path.join(__dirname, `videos/${req.params.name}`));
+  res.sendFile(path.join(__dirname, `videos/${req.params.name}`));
 });
 
 app.get("/videos/:name", (req, res) => {
-  const path = `assets/${req.params.name}`;
+  const path = `videos/${req.params.name}`;
+  console.log(path);
 
   const stat = fs.statSync(path);
 
