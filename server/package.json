@@ -1,0 +1,24 @@
+{
+  "name": "video-stream",
+  "version": "1.0.0",
+  "main": "server.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "chokidar": "^3.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
+    "handbrake-js": "^5.0.0",
+    "node-gzip": "^1.1.2",
+    "nodemon": "^2.0.4",
+    "request": "^2.88.2",
+    "subsrt": "^1.1.1",
+    "subtitler": "^2.7.0",
+    "video-thumbnail-generator": "^1.1.3"
+  }
+}
