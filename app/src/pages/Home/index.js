@@ -35,7 +35,7 @@ function Home({ history }) {
       <Movies>
         {movies.map(movie => (
           <Movie key={movie.name} onClick={() => playMovie(movie)}>
-            <Title hasSubs={movie.sub}>
+            <Title hasSubs={movie.subs.length}>
               <p>{movie.name}</p>
               <div>
                 <FaClosedCaptioning size={22} />
