@@ -13,6 +13,31 @@ function renameFile(file) {
   return `${fileName}.vtt`;
 }
 
+function convertOthersToVtt(file, newFile) {
+  try {
+    const sub = fs.readFileSync(file, 'latin1');
+    const vtt = subsrt.convert(sub, { format: 'vtt' });
+
+    fs.writeFileSync(newFile, vtt);
+
+    console.log(`>>> Subtitle converted ${path.basename(newFile)}`);
+  } catch (err) {
+    console.log('Error: ', err.message);
+  }
+}
+
+function convertAssToVtt(file, newFile) {
+  try {
+    fs.createReadStream(file)
+      .pipe(ass2vtt())
+      .pipe(fs.createWriteStream(newFile));
+
+    console.log(`>>> Subtitle converted ${path.basename(newFile)}}`);
+  } catch (error) {
+    convertOthersToVtt(file, newFile);
+  }
+}
+
 function convertSubtitle(file) {
   const name = file.split('/').pop();
   const extension = path.extname(name).toLowerCase();
@@ -22,23 +47,14 @@ function convertSubtitle(file) {
   const newFile = renameFile(file);
 
   if (extension === '.ass') {
-    fs.createReadStream(file)
-      .pipe(ass2vtt())
-      .pipe(fs.createWriteStream(newFile));
+    convertAssToVtt(file, newFile);
   }
 
   if (extension !== '.ass') {
-    const sub = fs.readFileSync(file, 'utf8');
-
-    const vtt = subsrt.convert(sub, { format: 'vtt' });
-
-    fs.writeFileSync(newFile, vtt);
+    convertOthersToVtt(file, newFile);
   }
 
-  console.log(`>>> Subtitle converted ${name}`);
-
   fs.unlinkSync(file);
-
   console.log(`>>> Deleted old subtitle ${name}`);
 }
 

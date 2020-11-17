@@ -43,7 +43,6 @@ app.get('/', async (req, res) => {
 
     return {
       name,
-      // sub: fsSync.existsSync(path.join(folder, sub)) ? sub : '',
       subs,
       thumb: fsSync.existsSync(path.join(folder, thumb)) ? thumb : '',
     };
