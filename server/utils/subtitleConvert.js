@@ -1,32 +1,43 @@
 const subsrt = require('subsrt');
+const ass2vtt = require('ass-to-vtt');
 const fs = require('fs');
+const path = require('path');
 
-function renameFile(path) {
-  const paths = path.split('.');
+function renameFile(file) {
+  const parts = file.split('.');
 
-  paths.pop();
+  parts.pop();
 
-  const fileName = paths.join('.');
+  const fileName = parts.join('.');
 
   return `${fileName}.vtt`;
 }
 
-function convertSubtitle(path) {
-  const name = path.split('/').pop();
+function convertSubtitle(file) {
+  const name = file.split('/').pop();
+  const extension = path.extname(name).toLowerCase();
 
   console.log(`>>> Converting subtitle ${name}`);
 
-  const newFile = renameFile(path);
+  const newFile = renameFile(file);
 
-  const sub = fs.readFileSync(path, 'utf-8');
+  if (extension === '.ass') {
+    fs.createReadStream(file)
+      .pipe(ass2vtt())
+      .pipe(fs.createWriteStream(newFile));
+  }
 
-  const vtt = subsrt.convert(sub, { format: 'vtt' });
+  if (extension !== '.ass') {
+    const sub = fs.readFileSync(file, 'utf8');
 
-  fs.writeFileSync(newFile, vtt);
+    const vtt = subsrt.convert(sub, { format: 'vtt' });
+
+    fs.writeFileSync(newFile, vtt);
+  }
 
   console.log(`>>> Subtitle converted ${name}`);
 
-  fs.unlinkSync(path);
+  fs.unlinkSync(file);
 
   console.log(`>>> Deleted old subtitle ${name}`);
 }

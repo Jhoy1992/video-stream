@@ -14,6 +14,14 @@ function findSubtitle(fileName) {
     return true;
   }
 
+  if (fs.existsSync(`${fileName}_0_eng.vtt`)) {
+    return true;
+  }
+
+  if (fs.existsSync(`${fileName}_0_pob.vtt`)) {
+    return true;
+  }
+
   for (let counter = 0; counter < SUBTITLES_EXTENSIONS.length; counter++) {
     if (fs.existsSync(`${fileName}.${SUBTITLES_EXTENSIONS[counter]}`)) {
       return true;
@@ -59,7 +67,7 @@ function watch() {
       extension.toLowerCase() === 'mp4' &&
       !fs.existsSync(`${fileName}.png`)
     ) {
-      thumbnailGenerator(file);
+      await thumbnailGenerator(file);
     }
 
     if (isVideoFile(extension) && !findSubtitle(fileName)) {

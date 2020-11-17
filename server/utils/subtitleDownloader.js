@@ -4,7 +4,8 @@ const path = require('path');
 const request = require('request');
 const { gunzip } = require('zlib');
 
-const convertSubtitle = require('./subtitleConvert');
+let brIndex = 0;
+let enIndex = 0;
 
 const download = (url, path, callback) => {
   request.head(url, (err, res, body) => {
@@ -37,17 +38,18 @@ async function downloadSubtitleByHash(file, token) {
   const resultsBr = await subtitler.api.searchForFile(token, 'pob', file);
 
   if (resultsBr.length) {
-    dowloadFile(resultsBr[0], name);
-    return true;
+    resultsBr.forEach(sub => dowloadFile(sub, `${name}_${brIndex}_pob`));
+    brIndex++;
   }
 
   const resultsEng = await subtitler.api.searchForFile(token, 'eng', file);
 
   if (resultsEng.length) {
-    dowloadFile(resultsEng[0], name);
-    return true;
+    resultsEng.forEach(sub => dowloadFile(sub, `${name}_${enIndex}_eng`));
+    enIndex++;
   }
 
+  // return resultsBr.length || resultsEng.length ? true : false;
   return false;
 }
 
@@ -57,17 +59,18 @@ async function downloadSubtitleByTitle(file, token) {
   const resultsBr = await subtitler.api.searchForTitle(token, 'pob', name);
 
   if (resultsBr.length) {
-    dowloadFile(resultsBr[0], name);
-    return true;
+    resultsBr.forEach(sub => dowloadFile(sub, `${name}_${brIndex}_pob`));
+    brIndex++;
   }
 
   const resultsEng = await subtitler.api.searchForTitle(token, 'eng', name);
 
   if (resultsEng.length) {
-    dowloadFile(resultsEng[0], name);
-    return true;
+    resultsEng.forEach(sub => dowloadFile(sub, `${name}_${enIndex}_eng`));
+    enIndex++;
   }
 
+  // return resultsBr.length || resultsEng.length ? true : false;
   return false;
 }
 

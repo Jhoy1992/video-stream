@@ -27,17 +27,24 @@ app.get('/', async (req, res) => {
   const allFiles = await fs.readdir(folder);
 
   const mp4Files = allFiles.filter(
-    file => path.extname(file).toLocaleLowerCase() === '.mp4'
+    file => path.extname(file).toLowerCase() === '.mp4'
+  );
+
+  const subFiles = allFiles.filter(
+    file => path.extname(file).toLowerCase() === '.vtt'
   );
 
   const files = mp4Files.map(mp4File => {
     const name = mp4File;
-    const sub = mp4File.replace(path.extname(mp4File), '.vtt');
     const thumb = mp4File.replace(path.extname(mp4File), '.png');
+    const subs = subFiles.filter(sub =>
+      sub.includes(path.basename(mp4File, path.extname(mp4File)))
+    );
 
     return {
       name,
-      sub: fsSync.existsSync(path.join(folder, sub)) ? sub : '',
+      // sub: fsSync.existsSync(path.join(folder, sub)) ? sub : '',
+      subs,
       thumb: fsSync.existsSync(path.join(folder, thumb)) ? thumb : '',
     };
   });
